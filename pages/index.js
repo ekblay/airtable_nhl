@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {useEffect, useState, useMemo} from 'react';
-import Table from "./Table";
+import Table from "../Table";
 import "./../styles/Home.module.css"
 
 export default function Home() {
