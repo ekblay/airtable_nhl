@@ -20,9 +20,9 @@ export default function Table({ columns, data }) {
         <table className={"table table-bordered"} {...getTableProps()}>
             <thead >
             {headerGroups.map(headerGroup => (
-                <tr  {...headerGroup.getHeaderGroupProps()}>
+                <tr  {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
                     {headerGroup.headers.map(column => (
-                        <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                        <th {...column.getHeaderProps()} key={column.id}>{column.render("Header")}</th>
                     ))}
                 </tr>
             ))}
@@ -31,9 +31,9 @@ export default function Table({ columns, data }) {
             {rows.map((row, i) => {
                 prepareRow(row);
                 return (
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} key={row.id}>
                         {row.cells.map(cell => {
-                            return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                            return <td {...cell.getCellProps()} key={cell.id}>{cell.render("Cell")}</td>;
                         })}
                     </tr>
                 );
