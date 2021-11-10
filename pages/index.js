@@ -2,7 +2,6 @@ import axios from 'axios';
 import {useEffect, useState, useMemo} from 'react';
 import { useForm } from "react-hook-form";
 import Script from 'next/script'
-import { Alert } from 'react-bootstrap';
 import Table from "../Table";
 import "./../styles/Home.module.css"
 import Statistics from "../Statistics";
@@ -136,14 +135,13 @@ export default function Home() {
         <head>
             <meta charset="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-            <Script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></Script>
+            <Script defer  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></Script>
+            <Script defer  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></Script>
+            <Script defer  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></Script>
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
-            <Script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></Script>
-            <Script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></Script>
         </head>
 
         <body>
-
 
         {formView  &&
         <div className={"container "}>
@@ -243,6 +241,7 @@ export default function Home() {
             </div>
         </div>
         }
+
         {analysisView  &&
         <div>
             <ul className="nav nav-tabs">
