@@ -15,3 +15,7 @@ a {
   box-sizing: border-box;
 }
 
+
+.button-margin {
+  margin-left: 10px;
+}
