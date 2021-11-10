@@ -148,31 +148,28 @@ export default function Home() {
         <head>
             <meta charset="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-            <Script defer  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></Script>
-            <Script defer  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></Script>
-            <Script defer  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></Script>
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+            <Script defer  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></Script>
+
         </head>
 
         <body>
-        {/*<nav className="navbar navbar-light bg-light">*/}
-        {/*    <a className="navbar-brand" onClick={() => {*/}
-        {/*        setLoadingView(false);*/}
-        {/*        setAnalysisView(false);*/}
-        {/*        setStartYear("");*/}
-        {/*        setEndYear("");*/}
-        {/*        setStatsData("");*/}
-        {/*        setTeamID("");*/}
-        {/*        clearErrors();*/}
+        <nav className="navbar navbar-light bg-light">
+            <a className="navbar-brand" onClick={() => {
+                setLoadingView(false);
+                setAnalysisView(false);
+                setStartYear("");
+                setEndYear("");
+                setStatsData("");
+                setTeamID("");
+                clearErrors();
 
-        {/*        setFormView(true);*/}
-        {/*    }*/}
-        {/*    }>*/}
-        {/*        <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30"*/}
-        {/*             className="d-inline-block align-top" alt=""/>*/}
-        {/*            NHL Team Analyser*/}
-        {/*    </a>*/}
-        {/*</nav>*/}
+                setFormView(true);
+            }
+            }>
+                    NHL Team Analyser
+            </a>
+        </nav>
 
 
         {formView  &&
@@ -335,6 +332,9 @@ export default function Home() {
 
 
         </body>
+        <Script defer  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></Script>
+        <Script defer  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></Script>
+
         </html>
     )
 }
