@@ -1,12 +1,15 @@
 import axios from 'axios';
 import {useEffect, useState, useMemo} from 'react';
 import { useForm } from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
 import Script from 'next/script'
 import Table from "../Table";
 import "./../styles/Home.module.css"
 import Statistics from "../Statistics";
 
+
 export default function Home() {
+    const [data, setData] = useState([]);
 
     const [form_team_ID, setTeamID] = useState("");
     const [startYear, setStartYear] = useState("");
@@ -19,12 +22,12 @@ export default function Home() {
     const [analysisView, setAnalysisView] = useState(false);
     const [loadingView, setLoadingView] = useState(false);
 
-    const { register, errors } = useForm();
-    const submitRequest = async e => {
+    const { register, handleSubmit, formState: { errors }, clearErrors  } = useForm();
+
+    const submitRequest = async () => {
         setFormView(false);
         setLoadingView(true);
 
-        e.preventDefault();
         const result = await axios('https://statsapi.web.nhl.com/api/v1/teams/' + form_team_ID + '?expand=team.roster&season='+startYear+endYear );
         //console.log(result.data.teams[0].roster.roster);
 
@@ -60,6 +63,16 @@ export default function Home() {
         setAnalysisView(true);
     }
 
+    const isTeamIDValid = (v) => {
+
+        let valid = false;
+        data.forEach(team => {
+          if(team.teamId.toString() === v.toString())
+              valid = true
+       } )
+
+        return valid;
+    };
 
     const teams_columns = useMemo(   () => [
             {
@@ -118,7 +131,7 @@ export default function Home() {
             team.id === 23 || team.id === 52);
 
     }
-    const [data, setData] = useState([]);
+
     useEffect(() => {
         (async () => {
             const results = await axios('https://statsapi.web.nhl.com/api/v1/teams');
@@ -142,31 +155,82 @@ export default function Home() {
         </head>
 
         <body>
+        <nav className="navbar navbar-light bg-light">
+            <a className="navbar-brand" onClick={() => {
+                setLoadingView(false);
+                setAnalysisView(false);
+                setStartYear("");
+                setEndYear("");
+                setStatsData("");
+                setTeamID("");
+                clearErrors();
+
+                setFormView(true);
+            }
+            }>
+                <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30"
+                     className="d-inline-block align-top" alt=""/>
+                    NHL Team Analyser
+            </a>
+        </nav>
+
 
         {formView  &&
         <div className={"container "}>
-            <form className={" centered"} onSubmit={submitRequest}>
-                <div className=" row form-group ">
+            <form className={" centered"} onSubmit={handleSubmit(submitRequest)}>
+                <div className=" row form-group flex-column ">
                     <label htmlFor="exampleInputEmail1">Enter the team ID:</label>
                     <input className="form-control  "
                            id="team_id" value={form_team_ID}
-                        // ref={register}
-                           required={true}
+                           name={"team_id"}
+                           {...register('team_id',{
+                               validate: {
+                                    isTeamIdValid: v => isTeamIDValid(v) || "*Please enter a Team ID from the table below*"
+                               },
+                               required: "*The team ID is required*"
+                           })}
                            onChange={(e) => setTeamID(e.target.value)}
-                           aria-describedby="emailHelp"
                            placeholder="Enter team ID"/>
                     <small id="id_help" className="form-text text-muted">Enter the ID from one of the teams listed in the table below</small>
+
+                    <div className={"text-danger"}>
+                    <ErrorMessage errors={errors} name="team_id">
+                        {({ messages }) =>
+                            messages &&
+                            Object.entries(messages).map(([type, message]) => (
+                                <span className="text-danger"  key={type}>{message}</span>
+                            ))
+                        }
+                    </ErrorMessage>
+                    </div>
+
                 </div>
                 <div className="row form-group flex-column">
                     <label htmlFor="start_date">Enter season start year: </label>
 
                     <input  value={startYear}
-                            required={true}
-                        // ref={register(valida)}
+                            {...register("start",{
+                                validate:{
+                                    lessThanTen: v => parseInt(v) <= 2018 || "*The start year has to be less than or equal to 2018*"},
+                                pattern: {value: /(?:(?:19|20)[0-9]{2})/, message: "*The start year has to be of the form YYYY*"},
+                                required: "*The start year for the season is required*"}
+                            )}
                             onChange={(e) =>{setStartYear(e.target.value); setEndYear(parseInt(e.target.value)+1);}}
                             placeholder="YYYY"
-                            className="col-sm-2 col-form-label form-control" id="start"/>
+                            className="col-sm-2 col-form-label form-control" id="start" name={"start"}/>
                     <small id="id_help" className="form-text text-muted">Year should be less than or equal to 2018</small>
+
+                    <div className={"text-danger"}>
+                    <ErrorMessage errors={errors} name="start">
+                        {({ messages }) =>
+                            messages &&
+                            Object.entries(messages).map(([type, message]) => (
+                                <p  key={type}>{message}</p>
+                            ))
+                        }
+                    </ErrorMessage>
+                    </div>
+
                 </div>
 
                 <div className="row form-group">
@@ -177,9 +241,11 @@ export default function Home() {
                 <div className="row form-group">
                     <button type="submit" className="col  col-lg-2 btn btn-primary">Search</button>
                     <button
-                        onClick={(e) =>{ setTeamID("");
-                        setStartYear("");
-                        setEndYear("");}}
+                        onClick={(e) =>{
+                            setTeamID("");
+                            setStartYear("");
+                            setEndYear("");
+                            clearErrors();}}
                         className=" button-margin col col-lg-2 btn btn-danger">Clear</button>
                 </div>
             </form>

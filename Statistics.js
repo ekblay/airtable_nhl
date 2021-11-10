@@ -19,7 +19,7 @@ export default function Statistics ({playerStats}) {
         datasets: [
             {
                 label: 'Goals/Games Played',
-                backgroundColor: 'rgba(255,99,132,0.2)',
+                backgroundColor: 'rgba(8,28,234,0.2)',
                 borderColor: 'rgb(11,227,210)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(47,255,0,0.4)',
@@ -42,7 +42,7 @@ export default function Statistics ({playerStats}) {
         datasets: [
             {
                 label: 'Assists/Games Played',
-                backgroundColor: 'rgba(255,99,132,0.2)',
+                backgroundColor: 'rgba(8,28,234,0.2)',
                 borderColor: 'rgb(11,227,210)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(47,255,0,0.4)',
@@ -64,7 +64,7 @@ export default function Statistics ({playerStats}) {
         datasets: [
             {
                 label: 'Power Play Goals/Games Played',
-                backgroundColor: 'rgba(255,99,132,0.2)',
+                backgroundColor: 'rgba(8,28,234,0.2)',
                 borderColor: 'rgb(11,227,210)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(47,255,0,0.4)',
@@ -86,7 +86,7 @@ export default function Statistics ({playerStats}) {
         datasets: [
             {
                 label: 'Overtime Goals/Games Played',
-                backgroundColor: 'rgba(255,99,132,0.2)',
+                backgroundColor: 'rgba(8,28,234,0.2)',
                 borderColor: 'rgb(11,227,210)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(47,255,0,0.4)',
@@ -107,7 +107,7 @@ export default function Statistics ({playerStats}) {
         datasets: [
             {
                 label: 'Shots/Games Played',
-                backgroundColor: 'rgba(255,99,132,0.2)',
+                backgroundColor: 'rgba(8,28,234,0.2)',
                 borderColor: 'rgb(11,227,210)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(47,255,0,0.4)',
@@ -128,7 +128,7 @@ export default function Statistics ({playerStats}) {
         datasets: [
             {
                 label: '(Sum of all Stats)/Games Played',
-                backgroundColor: 'rgba(255,99,132,0.2)',
+                backgroundColor: 'rgba(8,28,234,0.2)',
                 borderColor: 'rgb(11,227,210)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(47,255,0,0.4)',
