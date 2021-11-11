@@ -21,48 +21,57 @@ export default function Home() {
     const [formView, setFormView] = useState(false);
     const [analysisView, setAnalysisView] = useState(false);
     const [loadingView, setLoadingView] = useState(false);
+    const [errorView, setErrorView] = useState(false);
 
-
-    const { register, handleSubmit, formState: { errors }, clearErrors, reset   } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset ,  clearErrors  } = useForm();
 
     const submitRequest = async () => {
+
+
+        let roster;
+        try {
+            const result = await axios('https://statsapi.web.nhl.com/api/v1/teams/' + form_team_ID + '?expand=team.roster&season='+startYear+endYear );
+            //console.log(result.data.teams[0].roster.roster);
+            //player.person.id
+            roster = result.data.teams[0].roster.roster;
+        }catch (e) {
+            setErrorView(true);
+            return;
+        }
+
+        var playerStats = [];
+        var res;
+
         setFormView(false);
         setLoadingView(true);
-
-        const result = await axios('https://statsapi.web.nhl.com/api/v1/teams/' + form_team_ID + '?expand=team.roster&season='+startYear+endYear );
-
-
-        try {
-            var playerStats = [];
-            var res;
-            for (const player of roster) {
-                res = await axios('https://statsapi.web.nhl.com/api/v1/people/' + player.person.id + '/stats?stats=statsSingleSeason&season=' + startYear + endYear);
+        for (const player of roster) {
+            try {
+                res = await axios('https://statsapi.web.nhl.com/api/v1/people/'+player.person.id+'/stats?stats=statsSingleSeason&season='+startYear+endYear);
                 var stat = res.data.stats[0].splits[0].stat;
-                playerStats.push({
-                    playerId: player.person.id,
-                    playerName: player.person.fullName,
-                    gamesPlayed: stat.games ? stat.games : 0,
-                    goals: stat.goals ? stat.goals : 0,
-                    assists: stat.assists ? stat.assists : 0,
-                    powerPlayGoals: stat.powerPlayGoals ? stat.powerPlayGoals : 0,
-                    overTimeGoals: stat.overTimeGoals ? stat.overTimeGoals : 0,
-                    shots: stat.shots ? stat.shots : 0
-                })
+            } catch (e) {
+                setFormView(true);
+                setLoadingView(false);
+                setErrorView(true);
+                return;
             }
-            console.log(playerStats);
-            setStatsData(playerStats);
 
-            setTeamID("");
-            setEndYear("");
-            setStartYear("");
-
-
-            setLoadingView(false);
-            setAnalysisView(true);
-        }catch (e) {
-            console.log("The record does not exist for the specified season");
-
+            playerStats.push({
+                playerId: player.person.id,
+                playerName: player.person.fullName,
+                gamesPlayed: stat.games ? stat.games : 0,
+                goals: stat.goals ? stat.goals : 0,
+                assists: stat.assists ? stat.assists : 0,
+                powerPlayGoals: stat.powerPlayGoals ? stat.powerPlayGoals : 0,
+                overTimeGoals: stat.overTimeGoals ? stat.overTimeGoals: 0,
+                shots: stat.shots ? stat.shots :0
+            })
         }
+        setStatsData(playerStats);
+
+        reset();
+        setLoadingView(false);
+        setAnalysisView(true);
+        setErrorView(false);
     }
 
     const isTeamIDValid = (v) => {
@@ -160,14 +169,16 @@ export default function Home() {
         <nav className="navbar navbar-light bg-light">
             <a className="navbar-brand" onClick={async () =>
             {
-                reset();
+                setTeamID("");
+                setStartYear("");
+                setEndYear("");
+                clearErrors();
+
                 setLoadingView(false);
                 setAnalysisView(false);
+                setErrorView(false);
                 setFormView(true);
                 setStatsData(null);
-
-
-
             }}>
                 NHL Team Analyser
             </a>
@@ -177,6 +188,11 @@ export default function Home() {
         {formView  &&
         <div className={"container"}>
             <form className={" centered"} onSubmit={handleSubmit(submitRequest)}>
+                {errorView &&
+                <div className="alert alert-danger" role="alert">
+                    We encountered an issue while retrieving the requested season. Please try a later season.
+                </div>
+                }
                 <div className=" row form-group flex-column">
                     <label htmlFor="exampleInputEmail1">Enter the team ID:</label>
                     <input className="form-control  "
