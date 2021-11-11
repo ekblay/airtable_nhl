@@ -22,54 +22,56 @@ export default function Home() {
     const [analysisView, setAnalysisView] = useState(false);
     const [loadingView, setLoadingView] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, clearErrors  } = useForm();
+
+    const { register, handleSubmit, formState: { errors }, clearErrors, reset   } = useForm();
 
     const submitRequest = async () => {
         setFormView(false);
         setLoadingView(true);
 
         const result = await axios('https://statsapi.web.nhl.com/api/v1/teams/' + form_team_ID + '?expand=team.roster&season='+startYear+endYear );
-        //console.log(result.data.teams[0].roster.roster);
 
-        //player.person.id
-        const roster = result.data.teams[0].roster.roster;
 
-        var playerStats = [];
-        var res;
-        for (const player of roster) {
-            res = await axios('https://statsapi.web.nhl.com/api/v1/people/'+player.person.id+'/stats?stats=statsSingleSeason&season='+startYear+endYear);
-            // console.log(player);
-            var stat = res.data.stats[0].splits[0].stat;
-            playerStats.push({
-                playerId: player.person.id,
-                playerName: player.person.fullName,
-                gamesPlayed: stat.games ? stat.games : 0,
-                goals: stat.goals ? stat.goals : 0,
-                assists: stat.assists ? stat.assists : 0,
-                powerPlayGoals: stat.powerPlayGoals ? stat.powerPlayGoals : 0,
-                overTimeGoals: stat.overTimeGoals ? stat.overTimeGoals: 0,
-                shots: stat.shots ? stat.shots :0
-            })
+        try {
+            var playerStats = [];
+            var res;
+            for (const player of roster) {
+                res = await axios('https://statsapi.web.nhl.com/api/v1/people/' + player.person.id + '/stats?stats=statsSingleSeason&season=' + startYear + endYear);
+                var stat = res.data.stats[0].splits[0].stat;
+                playerStats.push({
+                    playerId: player.person.id,
+                    playerName: player.person.fullName,
+                    gamesPlayed: stat.games ? stat.games : 0,
+                    goals: stat.goals ? stat.goals : 0,
+                    assists: stat.assists ? stat.assists : 0,
+                    powerPlayGoals: stat.powerPlayGoals ? stat.powerPlayGoals : 0,
+                    overTimeGoals: stat.overTimeGoals ? stat.overTimeGoals : 0,
+                    shots: stat.shots ? stat.shots : 0
+                })
+            }
+            console.log(playerStats);
+            setStatsData(playerStats);
+
+            setTeamID("");
+            setEndYear("");
+            setStartYear("");
+
+
+            setLoadingView(false);
+            setAnalysisView(true);
+        }catch (e) {
+            console.log("The record does not exist for the specified season");
+
         }
-        console.log(playerStats);
-        setStatsData(playerStats);
-
-        setTeamID("");
-        setEndYear("");
-        setStartYear("");
-
-
-        setLoadingView(false);
-        setAnalysisView(true);
     }
 
     const isTeamIDValid = (v) => {
 
         let valid = false;
         data.forEach(team => {
-          if(team.teamId.toString() === v.toString())
-              valid = true
-       } )
+            if(team.teamId.toString() === v.toString())
+                valid = true
+        } )
 
         return valid;
     };
@@ -148,68 +150,58 @@ export default function Home() {
         <head>
             <meta charset="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-                  crossOrigin="anonymous"/>
-            <Script defer src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-                    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-                    crossOrigin="anonymous"></Script>
-            <Script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-                    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-                    crossOrigin="anonymous"></Script>
-            <Script defer  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-                    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-                    crossOrigin="anonymous"></Script>
 
-
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css"/>
+            <Script defer src="https://code.jquery.com/jquery-3.5.1.min.js"></Script>
+            <Script defer src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></Script>
         </head>
 
         <body>
         <nav className="navbar navbar-light bg-light">
-            <a className="navbar-brand" onClick={() => {
+            <a className="navbar-brand" onClick={async () =>
+            {
+                reset();
                 setLoadingView(false);
                 setAnalysisView(false);
-                setStartYear("");
-                setEndYear("");
-                setStatsData("");
-                setTeamID("");
-                clearErrors();
-
                 setFormView(true);
-            }
-            }>
-                    NHL Team Analyser
+                setStatsData(null);
+
+
+
+            }}>
+                NHL Team Analyser
             </a>
         </nav>
 
 
         {formView  &&
-        <div className={"container "}>
+        <div className={"container"}>
             <form className={" centered"} onSubmit={handleSubmit(submitRequest)}>
-                <div className=" row form-group flex-column ">
+                <div className=" row form-group flex-column">
                     <label htmlFor="exampleInputEmail1">Enter the team ID:</label>
                     <input className="form-control  "
                            id="team_id" value={form_team_ID}
                            name={"team_id"}
                            {...register('team_id',{
                                validate: {
-                                    isTeamIdValid: v => isTeamIDValid(v) || "*Please enter a Team ID from the table below*"
+                                   isTeamIdValid: v => isTeamIDValid(v) || "*Please enter a Team ID from the table below*"
                                },
                                required: "*The team ID is required*"
                            })}
                            onChange={(e) => setTeamID(e.target.value)}
+
                            placeholder="Enter team ID"/>
                     <small id="id_help" className="form-text text-muted">Enter the ID from one of the teams listed in the table below</small>
 
                     <div className={"text-danger"}>
-                    <ErrorMessage errors={errors} name="team_id">
-                        {({ messages }) =>
-                            messages &&
-                            Object.entries(messages).map(([type, message]) => (
-                                <span className="text-danger"  key={type}>{message}</span>
-                            ))
-                        }
-                    </ErrorMessage>
+                        <ErrorMessage errors={errors} name="team_id">
+                            {({ messages }) =>
+                                messages &&
+                                Object.entries(messages).map(([type, message]) => (
+                                    <span className="text-danger"  key={type}>{message}</span>
+                                ))
+                            }
+                        </ErrorMessage>
                     </div>
 
                 </div>
@@ -229,14 +221,14 @@ export default function Home() {
                     <small id="id_help" className="form-text text-muted">Year should be less than or equal to 2018</small>
 
                     <div className={"text-danger"}>
-                    <ErrorMessage errors={errors} name="start">
-                        {({ messages }) =>
-                            messages &&
-                            Object.entries(messages).map(([type, message]) => (
-                                <p  key={type}>{message}</p>
-                            ))
-                        }
-                    </ErrorMessage>
+                        <ErrorMessage errors={errors} name="start">
+                            {({ messages }) =>
+                                messages &&
+                                Object.entries(messages).map(([type, message]) => (
+                                    <p  key={type}>{message}</p>
+                                ))
+                            }
+                        </ErrorMessage>
                     </div>
 
                 </div>
@@ -248,15 +240,18 @@ export default function Home() {
 
                 <div className="row form-group">
                     <button type="submit" className="col  col-lg-2 btn btn-primary">Search</button>
-                    <button
-                        onClick={(e) =>{
-                            setTeamID("");
-                            setStartYear("");
-                            setEndYear("");
-                            clearErrors();}}
-                        className=" button-margin col col-lg-2 btn btn-danger">Clear</button>
                 </div>
             </form>
+            <div className={"row form-group"}>
+                <button
+                    onClick={(e) =>{
+                        setTeamID("");
+                        setStartYear("");
+                        setEndYear("");
+                        clearErrors();}}
+                    className="col col-lg-2 btn btn-danger">Clear</button>
+            </div>
+
             <div className="row">
                 <Table columns={teams_columns} data={data}/>
             </div>
