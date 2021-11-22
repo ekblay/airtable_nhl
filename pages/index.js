@@ -6,6 +6,7 @@ import Script from 'next/script'
 import Table from "../Table";
 import "./../styles/Home.module.css"
 import Statistics from "../Statistics";
+import $ from 'jquery';
 
 
 export default function Home() {
@@ -23,10 +24,13 @@ export default function Home() {
     const [loadingView, setLoadingView] = useState(false);
     const [errorView, setErrorView] = useState(false);
 
+    const [table, setTable] = useState(true);
+    const [analysis, setAnalysis] = useState(false);
+
     const { register, handleSubmit, formState: { errors }, reset ,  clearErrors  } = useForm();
 
-    const submitRequest = async () => {
 
+    const submitRequest = async () => {
 
         let roster;
         try {
@@ -34,6 +38,8 @@ export default function Home() {
             //console.log(result.data.teams[0].roster.roster);
             //player.person.id
             roster = result.data.teams[0].roster.roster;
+            //8
+            //2012
         }catch (e) {
             setErrorView(true);
             return;
@@ -150,19 +156,29 @@ export default function Home() {
             const mappedTeams = filteredTeam.map(x => {return {teamId: x.id, abbreviation: x.abbreviation, name: x.name }});
             setData(mappedTeams);
             setFormView(true);
+
         })();
     }, []);
 
+    const toggleTable =() => {
+        setTable(true);
+        setAnalysis(false);
+    }
+
+    const toggleAnalysis = () => {
+        setTable(false);
+        setAnalysis(true);
+    }
+
 
     return (
+
         <html lang="en">
         <head>
             <meta charSet="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
-
-
-            <Script defer  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></Script>
+            {/*<Script defer  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></Script>*/}
             <Script defer  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></Script>
             <Script defer  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></Script>
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
@@ -334,27 +350,34 @@ export default function Home() {
         <div>
             <ul className="nav nav-tabs">
                 <li className="nav-item">
-                    <a className="nav-link active" data-toggle="tab" href="#statistics">Statistics Table</a>
+                    <button onClick={toggleTable}>Statistics Table</button>
                 </li>
 
-                <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#analysis">Statistics Analysis</a>
+                <li className="nav-item" >
+                    <button onClick={toggleAnalysis}>Statistics Analysis</button>
                 </li>
             </ul>
 
-
             <div className="tab-content">
-                <div className="tab-pane container active" id="statistics">
+
+                {table &&
+                <div className="container " id="statistics">
+                    <h2>Statistics Table</h2>
                     <Table columns={player_stats_column} data={statsData}/>
                 </div>
-                <div className="tab-pane container fade" id="analysis">
+                }
+
+                {analysis &&
+                <div className="container" id="analysis">
+                    <h2>Statistics Analysis</h2>
                     <Statistics playerStats={statsData}/>
                 </div>
+                }
+
 
             </div>
         </div>
         }
-
 
         </body>
         </html>

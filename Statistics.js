@@ -1,5 +1,5 @@
 //Statistics.js
-import React from "react";
+import React, {useState} from "react";
 import {Bar} from 'react-chartjs-2';
 import Table from "./Table";
 export default function Statistics ({playerStats}) {
@@ -138,61 +138,131 @@ export default function Statistics ({playerStats}) {
             }
         ]
     };
+    const [goal, setGoals] = useState(true);
+    const [assist, setAssist] = useState(false);
+    const [ppG, setPpg] = useState(false);
+    const [otG, setOtg] = useState(false);
+    const [shot, setShot] = useState(false);
+    const [overall, setOverall] = useState(false);
+
+    const toggleGoals = () => {
+        setGoals(true);
+        setAssist(false);
+        setPpg(false);
+        setOtg(false);
+        setShot(false);
+        setOverall(false);
+    }
+
+    const toggleAssist = () => {
+        setGoals(false);
+        setAssist(true);
+        setPpg(false);
+        setOtg(false);
+        setShot(false);
+        setOverall(false);
+    }
+
+    const togglePpg = () => {
+        setGoals(false);
+        setAssist(false);
+        setPpg(true);
+        setOtg(false);
+        setShot(false);
+        setOverall(false);
+    }
+    const toggleOtg = () => {
+        setGoals(false);
+        setAssist(false);
+        setPpg(false);
+        setOtg(true);
+        setShot(false);
+        setOverall(false);
+    }
+    const toggleShot = () => {
+        setGoals(false);
+        setAssist(false);
+        setPpg(false);
+        setOtg(false);
+        setShot(true);
+        setOverall(false);
+    }
+    const toggleOverall = () => {
+        setGoals(false);
+        setAssist(false);
+        setPpg(false);
+        setOtg(false);
+        setShot(false);
+        setOverall(true);
+    }
+
     return (
         <div>
             <ul className="nav nav-tabs">
                 <li className="nav-item">
-                    <a className="nav-link active" data-toggle="tab" href="#goals">Goals</a>
+                    <button onClick={toggleGoals}>Goals</button>
                 </li>
 
                 <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#assists">Assists</a>
+                    <button onClick={toggleAssist}>Assists</button>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#power_play_goals">Power Play Goals</a>
+                    <button onClick={togglePpg}>Power Play Goals</button>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#over_time_goals">Over Time Goals</a>
+                    <button onClick={toggleOtg}>Over Time Goals</button>
+
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#shots">Shots</a>
+                    <button onClick={toggleShot}>Shots</button>
                 </li>
 
                 <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#overall_performance">Overall Performance</a>
+                    <button onClick={toggleOverall}>Overall Performance</button>
                 </li>
             </ul>
 
+
             <div className="tab-content">
-                <div className="tab-pane container active" id="goals">
-                    <h2>Goals Breakdown</h2>
+                {goal &&
+                <div className=" container" id="goals">
+                    <h4>Goals Breakdown</h4>
                     <Bar data={goalData} width={400} height={400} type={'bar'}/>
                 </div>
+                }
 
-                <div className="tab-pane container fade" id="assists">
-                    <h2>Assists Breakdown</h2>
+                {assist &&
+                <div className=" container " id="assists">
+                    <h4>Assists Breakdown</h4>
                     <Bar data={assistsData} width={400} height={400} type={'bar'}/>
                 </div>
-
-                <div className="tab-pane container fade" id="power_play_goals">
-                    <h2>Power Play Goals Breakdown</h2>
+                }
+                {ppG &&
+                <div className=" container " id="power_play_goals">
+                    <h4>Power Play Goals Breakdown</h4>
                     <Bar data={powerPlayData} width={400} height={400} type={'bar'}/>
                 </div>
+                }
 
-                <div className="tab-pane container fade" id="over_time_goals">
-                    <h2>Overtime Goals Breakdown</h2>
+                {otG &&
+                <div className=" container " id="over_time_goals">
+                    <h4>Overtime Goals Breakdown</h4>
                     <Bar data={overTimeGoalsData} width={400} height={400} type={'bar'}/>
                 </div>
+                }
 
-                <div className="tab-pane container fade" id="shots">
-                    <h2>Shots Breakdown</h2>
+                {shot &&
+                <div className=" container " id="shots">
+                    <h4>Shots Breakdown</h4>
                     <Bar data={shotsData} width={400} height={400} type={'bar'}/>
                 </div>
-
-                <div className="tab-pane container fade" id="overall_performance">
-                    <h2>Overall Breakdown</h2>
+                }
+                {overall &&
+                <div className=" container " id="overall_performance">
+                    <h4>Overall Breakdown</h4>
                     <Bar data={overallPerformanceData} width={400} height={400} type={'bar'}/>
                 </div>
+                }
             </div>
 
         </div>
