@@ -12,7 +12,7 @@ export default function Statistics ({playerStats}) {
 
     //Goals
     const goals = ()=> {
-        return playerStats.map((x) => {return (x.shots/x.gamesPlayed)})
+        return playerStats.map((x) => {return (x.goals/x.gamesPlayed)})
     }
     const goalData = {
         labels: label(),
@@ -97,26 +97,27 @@ export default function Statistics ({playerStats}) {
         ]
     };
 
-    //Shots
-    const shots = ()=> {
-        return playerStats.map((x) => {return (x.shots/x.gamesPlayed)})
+    //Shots vs goals
+    const shotsVsGoals = ()=> {
+        return playerStats.map((x) => {return (x.goals/x.shots)})
     }
 
     const shotsData = {
         labels: label(),
         datasets: [
             {
-                label: 'Shots/Games Played',
+                label: 'Shots/Goals',
                 backgroundColor: 'rgba(8,28,234,0.2)',
                 borderColor: 'rgb(11,227,210)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(47,255,0,0.4)',
                 hoverBorderColor: 'rgb(0,88,101)',
-                data: shots(),
+                data: shotsVsGoals(),
                 indexAxis: 'y'
             }
         ]
     };
+
 
     //Overall Performance
     const overallPerformance = ()=> {
@@ -153,7 +154,6 @@ export default function Statistics ({playerStats}) {
         setShot(false);
         setOverall(false);
     }
-
     const toggleAssist = () => {
         setGoals(false);
         setAssist(true);
@@ -162,7 +162,6 @@ export default function Statistics ({playerStats}) {
         setShot(false);
         setOverall(false);
     }
-
     const togglePpg = () => {
         setGoals(false);
         setAssist(false);
@@ -214,7 +213,7 @@ export default function Statistics ({playerStats}) {
 
                 </li>
                 <li className="nav-item">
-                    <button onClick={toggleShot}>Shots</button>
+                    <button onClick={toggleShot}>Goals vs Shots</button>
                 </li>
 
                 <li className="nav-item">
@@ -227,19 +226,40 @@ export default function Statistics ({playerStats}) {
                 {goal &&
                 <div className=" container" id="goals">
                     <h4>Goals Breakdown</h4>
+                    <h5>
+                        Understand who is scoring the most goals per game on the team. This would help to give more perspective
+                         about who the best goal scorers are not just by high numbers but by an aggregation against their respective number of games played.
+                        These players are well suited for finishing well. Considerations should be made to keep them on the offensive.
+                        The graph here factors in the number of games played by each player as it properly reflects their performance in this category.
+                    </h5>
                     <Bar data={goalData} width={400} height={400} type={'bar'}/>
+
+                    <hr/>
                 </div>
                 }
 
                 {assist &&
                 <div className=" container " id="assists">
                     <h4>Assists Breakdown</h4>
+                    <h5>
+                        Understand who is producing the most assists. This information will help you understand who the playmakers on your team are.
+                        These players are very well suited for supporting offensive position as they are more likely to complete good deliveries to your strikers.
+                        The graph here factors in the number of games played by each player as it properly reflects their performance in this category.
+                    </h5>
                     <Bar data={assistsData} width={400} height={400} type={'bar'}/>
                 </div>
                 }
                 {ppG &&
                 <div className=" container " id="power_play_goals">
                     <h4>Power Play Goals Breakdown</h4>
+
+                    <h5>
+                        Understand who scores the most power play goals. This analysis helps determine what players work best on the power play and who
+                        should be on the ice during power plays. The high performers in this category show more resilience in more intense situations as seen by their
+                        performances during power play moments. Using player performance here together with overtimes goal performances will give you a good understanding of who these
+                        players are. The graph here factors in the number of games played by each player as it properly reflects their performance in this category.
+                    </h5>
+
                     <Bar data={powerPlayData} width={400} height={400} type={'bar'}/>
                 </div>
                 }
@@ -247,19 +267,33 @@ export default function Statistics ({playerStats}) {
                 {otG &&
                 <div className=" container " id="over_time_goals">
                     <h4>Overtime Goals Breakdown</h4>
+                    <h5>
+                        Understand who scores the most overtime goals. This helps determine who should be on the ice during overtime and what players show up in clutch moments.
+                        Using player performance here together with power play goal performances will give you a good understanding of who these
+                        players are. The high performers in this category show more resilience in more intense situations as seen by their
+                        performances during power play moments. The graph here factors in the number of games played by each player as it properly reflects their performance in this category.
+                    </h5>
                     <Bar data={overTimeGoalsData} width={400} height={400} type={'bar'}/>
                 </div>
                 }
 
                 {shot &&
                 <div className=" container " id="shots">
-                    <h4>Shots Breakdown</h4>
+                    <h4>Goals vs Shots Breakdown</h4>
+                    <h5>
+                        This category brings to light who your most reliable players are when it comes to shot accuracy and offensive plays. The high performers in this section
+                        show more shot accuracy as they have a higher percentage of goals per shots.
+                    </h5>
                     <Bar data={shotsData} width={400} height={400} type={'bar'}/>
                 </div>
                 }
                 {overall &&
                 <div className=" container " id="overall_performance">
                     <h4>Overall Breakdown</h4>
+                    <h5>
+                        If you want to know who you overall top players are here you go. This is an aggregation of all the other analysis against the number of games played
+                        by each player. If you want to know who to sell, or keep or which player in your squad needs major improvement, use this information to help guide your decisions.
+                    </h5>
                     <Bar data={overallPerformanceData} width={400} height={400} type={'bar'}/>
                 </div>
                 }
