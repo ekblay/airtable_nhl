@@ -197,106 +197,90 @@ export default function Statistics ({playerStats}) {
 
     return (
         <div>
-            <ul className="nav nav-tabs">
-                <li className="nav-item">
-                    <button onClick={toggleGoals}>Goals</button>
-                </li>
-
-                <li className="nav-item">
-                    <button onClick={toggleAssist}>Assists</button>
-                </li>
-                <li className="nav-item">
-                    <button onClick={togglePpg}>Power Play Goals</button>
-                </li>
-                <li className="nav-item">
-                    <button onClick={toggleOtg}>Over Time Goals</button>
-
-                </li>
-                <li className="nav-item">
-                    <button onClick={toggleShot}>Goals vs Shots</button>
-                </li>
-
-                <li className="nav-item">
-                    <button onClick={toggleOverall}>Overall Performance</button>
-                </li>
-            </ul>
-
 
             <div className="tab-content">
-                {goal &&
+
                 <div className=" container" id="goals">
                     <h4>Goals Breakdown</h4>
+                    <hr/>
                     <h5>
                         Understand who is scoring the most goals per game on the team. This would help to give more perspective
-                         about who the best goal scorers are not just by high numbers but by an aggregation against their respective number of games played.
+                         about who the best goal scorers are; not just by high numbers but by an aggregation against their respective number of games played.
                         These players are well suited for finishing well. Considerations should be made to keep them on the offensive.
                         The graph here factors in the number of games played by each player as it properly reflects their performance in this category.
                     </h5>
-                    <Bar data={goalData} width={400} height={400} type={'bar'}/>
-
                     <hr/>
+                    <Bar data={goalData} width={400} height={400} type={'bar'}/>
                 </div>
-                }
 
-                {assist &&
+
+                <hr/>
                 <div className=" container " id="assists">
                     <h4>Assists Breakdown</h4>
+                    <hr/>
                     <h5>
-                        Understand who is producing the most assists. This information will help you understand who the playmakers on your team are.
+                        This information will help you understand who the playmakers on your team are.
                         These players are very well suited for supporting offensive position as they are more likely to complete good deliveries to your strikers.
                         The graph here factors in the number of games played by each player as it properly reflects their performance in this category.
                     </h5>
+                    <hr/>
                     <Bar data={assistsData} width={400} height={400} type={'bar'}/>
                 </div>
-                }
-                {ppG &&
+
+                <hr/>
                 <div className=" container " id="power_play_goals">
                     <h4>Power Play Goals Breakdown</h4>
-
+                    <hr/>
                     <h5>
-                        Understand who scores the most power play goals. This analysis helps determine what players work best on the power play and who
-                        should be on the ice during power plays. The high performers in this category show more resilience in more intense situations as seen by their
+                        This analysis helps determine what players work best on the power play and who should be on the ice during power plays. The high performers in this category show more resilience in more intense situations as seen by their
                         performances during power play moments. Using player performance here together with overtimes goal performances will give you a good understanding of who these
                         players are. The graph here factors in the number of games played by each player as it properly reflects their performance in this category.
                     </h5>
-
+                    <hr/>
                     <Bar data={powerPlayData} width={400} height={400} type={'bar'}/>
                 </div>
-                }
 
-                {otG &&
+
+                <hr/>
                 <div className=" container " id="over_time_goals">
                     <h4>Overtime Goals Breakdown</h4>
+                    <hr/>
                     <h5>
-                        Understand who scores the most overtime goals. This helps determine who should be on the ice during overtime and what players show up in clutch moments.
+                       This helps determine who should be on the ice during overtime and what players show up in clutch moments.
                         Using player performance here together with power play goal performances will give you a good understanding of who these
                         players are. The high performers in this category show more resilience in more intense situations as seen by their
                         performances during power play moments. The graph here factors in the number of games played by each player as it properly reflects their performance in this category.
                     </h5>
+                    <hr/>
                     <Bar data={overTimeGoalsData} width={400} height={400} type={'bar'}/>
                 </div>
-                }
 
-                {shot &&
+
+                <hr/>
                 <div className=" container " id="shots">
+
                     <h4>Goals vs Shots Breakdown</h4>
+                    <hr/>
                     <h5>
                         This category brings to light who your most reliable players are when it comes to shot accuracy and offensive plays. The high performers in this section
                         show more shot accuracy as they have a higher percentage of goals per shots.
                     </h5>
+                    <hr/>
                     <Bar data={shotsData} width={400} height={400} type={'bar'}/>
                 </div>
-                }
-                {overall &&
+
+                <hr/>
                 <div className=" container " id="overall_performance">
                     <h4>Overall Breakdown</h4>
+                    <hr/>
                     <h5>
-                        If you want to know who you overall top players are here you go. This is an aggregation of all the other analysis against the number of games played
-                        by each player. If you want to know who to sell, or keep or which player in your squad needs major improvement, use this information to help guide your decisions.
+                        If you want to know who your overall top players are here you go. This is an aggregation of all the other analysis against the number of games played
+                        by each player. If you want to know who to sell, or keep or, which player in your squad needs major improvement, use this information to help guide your decisions.
                     </h5>
+                    <hr/>
                     <Bar data={overallPerformanceData} width={400} height={400} type={'bar'}/>
                 </div>
-                }
+
             </div>
 
         </div>
